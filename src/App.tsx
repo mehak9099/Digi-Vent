@@ -10,6 +10,7 @@ import CTA from './components/CTA';
 import Footer from './components/Footer';
 import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/volunteer-registration" element={<RegisterPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/dashboard" element={<AdminDashboard />} />
         <Route path="/" element={
           <div className="min-h-screen bg-white">
             <Header />
