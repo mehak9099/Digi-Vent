@@ -12,6 +12,7 @@ import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
 import EventCreatePage from './pages/EventCreatePage';
+import TaskBoard from './pages/TaskBoard';
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
         <Route path="/admin/events/create" element={<EventCreatePage />} />
         <Route path="/admin/events/edit/:eventId" element={<EventCreatePage />} />
         <Route path="/admin/events/duplicate/:eventId" element={<EventCreatePage />} />
+        <Route path="/tasks/board" element={<TaskBoard />} />
+        <Route path="/admin/kanban" element={<TaskBoard />} />
+        <Route path="/kanban" element={<TaskBoard />} />
         <Route path="/" element={
           <div className="min-h-screen bg-white">
             <Header />
