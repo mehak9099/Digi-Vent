@@ -1,44 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, 
-  Clock, 
-  Users, 
-  Zap, 
-  TrendingUp, 
-  Bell, 
-  Settings, 
-  Search, 
-  Filter, 
-  Plus, 
-  ChevronLeft, 
-  ChevronRight, 
-  Check, 
-  X, 
-  AlertTriangle, 
-  Star, 
-  Target, 
-  Activity, 
-  MapPin, 
-  MessageCircle, 
-  Sync,
-  Brain,
-  Shield,
-  Award,
-  Heart,
-  RefreshCw,
-  Download,
-  Upload,
-  Eye,
-  EyeOff,
-  MoreHorizontal,
-  ChevronDown,
-  ChevronUp,
-  ArrowRight,
-  Info,
-  CheckCircle,
-  XCircle,
-  AlertCircle
-} from 'lucide-react';
+import { Calendar, Clock, Users, Zap, TrendingUp, Bell, Settings, Search, Filter, Plus, ChevronLeft, ChevronRight, Check, X, AlertTriangle, Star, Target, Activity, MapPin, MessageCircle, FolderSync as Sync, Brain, Shield, Award, Heart, RefreshCw, Download, Upload, Eye, EyeOff, MoreHorizontal, ChevronDown, ChevronUp, ArrowRight, Info, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 interface AvailabilitySlot {
   id: string;
