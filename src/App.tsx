@@ -13,6 +13,7 @@ import RegisterPage from './pages/RegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
 import EventCreatePage from './pages/EventCreatePage';
 import TaskBoard from './pages/TaskBoard';
+import VolunteerDashboard from './pages/VolunteerDashboard';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/dashboard" element={<AdminDashboard />} />
+        <Route path="/dashboard/volunteer" element={<VolunteerDashboard />} />
         <Route path="/admin/events/create" element={<EventCreatePage />} />
         <Route path="/admin/events/edit/:eventId" element={<EventCreatePage />} />
         <Route path="/admin/events/duplicate/:eventId" element={<EventCreatePage />} />
