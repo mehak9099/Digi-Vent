@@ -16,6 +16,7 @@ import TaskBoard from './pages/TaskBoard';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import AvailabilityPage from './pages/AvailabilityPage';
 import FeedbackPage from './pages/FeedbackPage';
+import EventPublicView from './pages/EventPublicView';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/kanban" element={<TaskBoard />} />
         <Route path="/availability" element={<AvailabilityPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/event/:eventId" element={<EventPublicView />} />
         <Route path="/" element={
           <div className="min-h-screen bg-white">
             <Header />
