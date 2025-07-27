@@ -17,6 +17,8 @@ import VolunteerDashboard from './pages/VolunteerDashboard';
 import AvailabilityPage from './pages/AvailabilityPage';
 import FeedbackPage from './pages/FeedbackPage';
 import EventPublicView from './pages/EventPublicView';
+import VolunteerManagement from './pages/VolunteerManagement';
+import BudgetExpenses from './pages/BudgetExpenses';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
         <Route path="/availability" element={<AvailabilityPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/event/:eventId" element={<EventPublicView />} />
+        <Route path="/admin/volunteers" element={<VolunteerManagement />} />
+        <Route path="/admin/expenses" element={<BudgetExpenses />} />
         <Route path="/" element={
           <div className="min-h-screen bg-white">
             <Header />
