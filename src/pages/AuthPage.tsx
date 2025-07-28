@@ -342,6 +342,12 @@ const AuthPage = () => {
                   {errors.email}
                 </p>
               )}
+              {activeTab === 'login' && loginError && (
+                <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-4 h-4 mr-1" />
+                  {loginError}
+                </p>
+              )}
             </div>
 
             {/* Phone (Registration only) */}

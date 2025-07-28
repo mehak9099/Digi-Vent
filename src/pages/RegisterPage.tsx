@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -61,6 +62,7 @@ interface ValidationErrors {
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { register, isLoading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
@@ -357,12 +359,26 @@ const RegisterPage = () => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const success = await register(formData);
+      if (success) {
+        // Redirect based on role
+        if (formData.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else if (formData.role === 'organizer') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard/volunteer');
+        }
+      } else {
+        alert('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
+    } finally {
       setIsSubmitting(false);
-      // Navigate to success page or dashboard
-      navigate('/welcome');
-    }, 2000);
+    }
   };
 
   const getPasswordStrengthColor = () => {
