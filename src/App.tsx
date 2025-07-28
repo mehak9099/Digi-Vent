@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -19,32 +19,53 @@ import FeedbackPage from './pages/FeedbackPage';
 import EventPublicView from './pages/EventPublicView';
 import VolunteerManagement from './pages/VolunteerManagement';
 import BudgetExpenses from './pages/BudgetExpenses';
+import PublicEventsPage from './pages/PublicEventsPage';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Authentication Routes */}
         <Route path="/login" element={<AuthPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/signin" element={<AuthPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/volunteer-registration" element={<RegisterPage />} />
+        
+        {/* Admin Routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/dashboard" element={<AdminDashboard />} />
-        <Route path="/dashboard/volunteer" element={<VolunteerDashboard />} />
         <Route path="/admin/events/create" element={<EventCreatePage />} />
         <Route path="/admin/events/edit/:eventId" element={<EventCreatePage />} />
         <Route path="/admin/events/duplicate/:eventId" element={<EventCreatePage />} />
+        <Route path="/admin/volunteers" element={<VolunteerManagement />} />
+        <Route path="/admin/expenses" element={<BudgetExpenses />} />
+        
+        {/* Volunteer Routes */}
+        <Route path="/dashboard/volunteer" element={<VolunteerDashboard />} />
+        <Route path="/availability" element={<AvailabilityPage />} />
+        
+        {/* Task Management */}
         <Route path="/tasks/board" element={<TaskBoard />} />
         <Route path="/admin/kanban" element={<TaskBoard />} />
         <Route path="/kanban" element={<TaskBoard />} />
-        <Route path="/availability" element={<AvailabilityPage />} />
+        
+        {/* Feedback */}
         <Route path="/feedback" element={<FeedbackPage />} />
+        
+        {/* Public Routes */}
+        <Route path="/events" element={<PublicEventsPage />} />
         <Route path="/event/:eventId" element={<EventPublicView />} />
-        <Route path="/admin/volunteers" element={<VolunteerManagement />} />
-        <Route path="/admin/expenses" element={<BudgetExpenses />} />
+        
+        {/* Error Routes */}
+        <Route path="/404" element={<ErrorPage errorType="404" />} />
+        <Route path="/403" element={<ErrorPage errorType="403" />} />
+        <Route path="/500" element={<ErrorPage errorType="500" />} />
+        
+        {/* Home Route */}
         <Route path="/" element={
           <div className="min-h-screen bg-white">
             <Header />
@@ -59,6 +80,9 @@ function App() {
             <Footer />
           </div>
         } />
+        
+        {/* Catch all route - redirect to 404 */}
+        <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
     </Router>
   );

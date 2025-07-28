@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { Eye, EyeOff, Calendar, ArrowLeft, Check, AlertCircle, User, Shield, Users } from 'lucide-react';
 
 interface FormData {
@@ -158,6 +160,7 @@ const AuthPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setLoginError('');
 
     // Validate all fields
     const fieldsToValidate = activeTab === 'login' 
@@ -173,12 +176,35 @@ const AuthPage = () => {
       setErrors(prev => ({ ...prev, acceptTerms: 'You must accept the terms and conditions' }));
     }
 
-    // Simulate API call
+    if (activeTab === 'login') {
+      // Handle login
+      const success = await login(formData.email, formData.password);
+      if (success) {
+        // Redirect based on role - this would be determined by the login response
+        const role = formData.email.includes('admin') ? 'admin' : 
+                    formData.email.includes('organizer') ? 'organizer' : 'volunteer';
+        
+        if (role === 'admin') {
+          navigate('/admin/dashboard');
+        } else if (role === 'organizer') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard/volunteer');
+        }
+      } else {
+        setLoginError('Invalid email or password. Please try again.');
+      }
+    } else {
+      // Handle registration - simulate API call
+      setTimeout(() => {
+        // Simulate successful registration
+        navigate('/dashboard/volunteer');
+      }, 2000);
+    }
+    
     setTimeout(() => {
       setIsSubmitting(false);
-      // Handle success/error states here
-      console.log('Form submitted:', { activeTab, formData });
-    }, 2000);
+    }, 100);
   };
 
   const getPasswordStrengthColor = () => {
