@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEvents } from '../hooks/useEvents';
 import { 
   Calendar, 
   MapPin, 
@@ -20,41 +21,14 @@ import {
   TrendingUp,
   X,
   Check,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
-
-interface PublicEvent {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  location: {
-    name: string;
-    address: string;
-  };
-  organizer: {
-    name: string;
-    avatar: string;
-    verified: boolean;
-  };
-  category: string;
-  tags: string[];
-  capacity: number;
-  registeredCount: number;
-  price: number;
-  rating: number;
-  reviewCount: number;
-  image: string;
-  featured: boolean;
-  status: 'upcoming' | 'ongoing' | 'completed';
-}
 
 const PublicEventsPage = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState<PublicEvent[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<PublicEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { events, loading, error, fetchEvents } = useEvents();
+  const [filteredEvents, setFilteredEvents] = useState(events);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
@@ -63,166 +37,6 @@ const PublicEventsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const eventsPerPage = 9;
-
-  // Mock data
-  const mockEvents: PublicEvent[] = [
-    {
-      id: '1',
-      title: 'TechFest 2025: Innovation Summit',
-      description: 'Join us for Pakistan\'s premier technology conference featuring industry leaders, innovative workshops, and networking opportunities.',
-      date: '2025-07-28',
-      time: '09:00 AM - 6:00 PM',
-      location: {
-        name: 'Lahore Convention Center',
-        address: 'Gulberg III, Lahore, Punjab'
-      },
-      organizer: {
-        name: 'TechCorp Pakistan',
-        avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-        verified: true
-      },
-      category: 'Technology',
-      tags: ['Innovation', 'AI', 'Startups', 'Networking'],
-      capacity: 500,
-      registeredCount: 347,
-      price: 0,
-      rating: 4.8,
-      reviewCount: 89,
-      image: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
-      featured: true,
-      status: 'upcoming'
-    },
-    {
-      id: '2',
-      title: 'Community Food Drive',
-      description: 'Monthly food distribution event serving local families in need. Volunteers welcome!',
-      date: '2025-08-15',
-      time: '8:00 AM - 2:00 PM',
-      location: {
-        name: 'Central Park Pavilion',
-        address: 'Model Town, Lahore, Punjab'
-      },
-      organizer: {
-        name: 'Community Helpers',
-        avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-        verified: true
-      },
-      category: 'Community Service',
-      tags: ['Charity', 'Food', 'Community', 'Volunteer'],
-      capacity: 150,
-      registeredCount: 89,
-      price: 0,
-      rating: 4.9,
-      reviewCount: 34,
-      image: 'https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
-      featured: false,
-      status: 'upcoming'
-    },
-    {
-      id: '3',
-      title: 'Digital Marketing Workshop',
-      description: 'Learn the latest digital marketing strategies and tools from industry experts.',
-      date: '2025-08-20',
-      time: '2:00 PM - 6:00 PM',
-      location: {
-        name: 'Business Hub',
-        address: 'DHA Phase 5, Lahore, Punjab'
-      },
-      organizer: {
-        name: 'Marketing Pro',
-        avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-        verified: false
-      },
-      category: 'Education',
-      tags: ['Marketing', 'Digital', 'Workshop', 'Business'],
-      capacity: 75,
-      registeredCount: 45,
-      price: 2500,
-      rating: 4.5,
-      reviewCount: 28,
-      image: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
-      featured: false,
-      status: 'upcoming'
-    },
-    {
-      id: '4',
-      title: 'Art & Culture Festival',
-      description: 'Celebrate local art and culture with exhibitions, performances, and interactive workshops.',
-      date: '2025-08-25',
-      time: '10:00 AM - 8:00 PM',
-      location: {
-        name: 'Cultural Center',
-        address: 'Mall Road, Lahore, Punjab'
-      },
-      organizer: {
-        name: 'Arts Council',
-        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-        verified: true
-      },
-      category: 'Arts & Culture',
-      tags: ['Art', 'Culture', 'Festival', 'Performance'],
-      capacity: 300,
-      registeredCount: 178,
-      price: 500,
-      rating: 4.7,
-      reviewCount: 56,
-      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
-      featured: true,
-      status: 'upcoming'
-    },
-    {
-      id: '5',
-      title: 'Startup Pitch Competition',
-      description: 'Watch innovative startups pitch their ideas to investors and industry experts.',
-      date: '2025-09-05',
-      time: '6:00 PM - 9:00 PM',
-      location: {
-        name: 'Innovation Hub',
-        address: 'Johar Town, Lahore, Punjab'
-      },
-      organizer: {
-        name: 'Startup Incubator',
-        avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-        verified: true
-      },
-      category: 'Business',
-      tags: ['Startup', 'Pitch', 'Investment', 'Innovation'],
-      capacity: 200,
-      registeredCount: 156,
-      price: 1000,
-      rating: 4.6,
-      reviewCount: 42,
-      image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
-      featured: false,
-      status: 'upcoming'
-    },
-    {
-      id: '6',
-      title: 'Health & Wellness Fair',
-      description: 'Discover health and wellness services, participate in fitness activities, and learn from experts.',
-      date: '2025-09-10',
-      time: '9:00 AM - 5:00 PM',
-      location: {
-        name: 'Sports Complex',
-        address: 'Cantt, Lahore, Punjab'
-      },
-      organizer: {
-        name: 'Health First',
-        avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-        verified: true
-      },
-      category: 'Health & Wellness',
-      tags: ['Health', 'Wellness', 'Fitness', 'Medical'],
-      capacity: 400,
-      registeredCount: 234,
-      price: 0,
-      rating: 4.4,
-      reviewCount: 67,
-      image: 'https://images.pexels.com/photos/3768916/pexels-photo-3768916.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
-      featured: false,
-      status: 'upcoming'
-    }
-  ];
 
   const categories = [
     'All Categories',
@@ -246,24 +60,23 @@ const PublicEventsPage = () => {
   ];
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setEvents(mockEvents);
-      setFilteredEvents(mockEvents);
-      setLoading(false);
-    }, 1000);
+    // Fetch public events only
+    fetchEvents({ isPublic: true, status: 'published' });
   }, []);
 
   useEffect(() => {
     let filtered = events.filter(event => {
       const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           (event.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                            event.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory;
+      const matchesCategory = selectedCategory === 'all' || 
+                             selectedCategory === 'All Categories' || 
+                             event.category === selectedCategory;
       
       const matchesLocation = selectedLocation === 'all' || 
-                             event.location.address.toLowerCase().includes(selectedLocation.toLowerCase());
+                             selectedLocation === 'All Locations' ||
+                             event.location_address.toLowerCase().includes(selectedLocation.toLowerCase());
 
       const matchesPrice = priceRange === 'all' ||
                           (priceRange === 'free' && event.price === 0) ||
@@ -276,11 +89,9 @@ const PublicEventsPage = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'date':
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
+          return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
         case 'popularity':
-          return b.registeredCount - a.registeredCount;
-        case 'rating':
-          return b.rating - a.rating;
+          return b.registered_count - a.registered_count;
         case 'price':
           return a.price - b.price;
         default:
@@ -308,8 +119,28 @@ const PublicEventsPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <Loader2 className="w-16 h-16 text-indigo-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading events...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <X className="w-8 h-8 text-red-600" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Events</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => fetchEvents({ isPublic: true, status: 'published' })}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -407,7 +238,6 @@ const PublicEventsPage = () => {
               >
                 <option value="date">Sort by Date</option>
                 <option value="popularity">Sort by Popularity</option>
-                <option value="rating">Sort by Rating</option>
                 <option value="price">Sort by Price</option>
               </select>
             </div>
@@ -497,27 +327,32 @@ const PublicEventsPage = () => {
                 <div
                   key={event.id}
                   onClick={() => handleEventClick(event.id)}
-                  className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 overflow-hidden ${
-                    event.featured ? 'ring-2 ring-indigo-500' : ''
-                  }`}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 overflow-hidden"
                 >
                   {/* Event Image */}
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={event.image}
+                      src={event.cover_image_url || 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop'}
                       alt={event.title}
                       className="w-full h-full object-cover"
                     />
-                    {event.featured && (
-                      <div className="absolute top-4 left-4 px-3 py-1 bg-indigo-600 text-white text-sm font-medium rounded-full">
-                        Featured
-                      </div>
-                    )}
                     <div className="absolute top-4 right-4 flex space-x-2">
-                      <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors duration-200">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle favorite
+                        }}
+                        className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors duration-200"
+                      >
                         <Heart className="w-4 h-4 text-gray-600" />
                       </button>
-                      <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors duration-200">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle share
+                        }}
+                        className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors duration-200"
+                      >
                         <Share2 className="w-4 h-4 text-gray-600" />
                       </button>
                     </div>
@@ -537,7 +372,7 @@ const PublicEventsPage = () => {
                       </span>
                       <div className="flex items-center text-sm text-gray-500">
                         <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(event.date).toLocaleDateString()}
+                        {new Date(event.start_date).toLocaleDateString()}
                       </div>
                     </div>
 
@@ -555,15 +390,18 @@ const PublicEventsPage = () => {
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center text-sm text-gray-600">
                         <Clock className="w-4 h-4 mr-2" />
-                        <span>{event.time}</span>
+                        <span>{new Date(event.start_date).toLocaleTimeString('en-US', { 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}</span>
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <MapPin className="w-4 h-4 mr-2" />
-                        <span>{event.location.name}</span>
+                        <span>{event.location_name}</span>
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <Users className="w-4 h-4 mr-2" />
-                        <span>{event.registeredCount}/{event.capacity} registered</span>
+                        <span>{event.registered_count}/{event.capacity} registered</span>
                       </div>
                     </div>
 
@@ -585,23 +423,15 @@ const PublicEventsPage = () => {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div className="flex items-center space-x-3">
                         <img
-                          src={event.organizer.avatar}
-                          alt={event.organizer.name}
+                          src={event.organizer?.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop'}
+                          alt={event.organizer?.full_name || 'Organizer'}
                           className="w-8 h-8 rounded-full object-cover"
                         />
                         <div>
                           <p className="text-sm font-medium text-gray-900 flex items-center">
-                            {event.organizer.name}
-                            {event.organizer.verified && (
-                              <Check className="w-4 h-4 text-blue-500 ml-1" />
-                            )}
+                            {event.organizer?.full_name || 'Event Organizer'}
+                            <Check className="w-4 h-4 text-blue-500 ml-1" />
                           </p>
-                          <div className="flex items-center">
-                            <Star className="w-3 h-3 text-yellow-400 fill-current mr-1" />
-                            <span className="text-xs text-gray-600">
-                              {event.rating} ({event.reviewCount})
-                            </span>
-                          </div>
                         </div>
                       </div>
                       
