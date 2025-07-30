@@ -35,6 +35,10 @@ const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [loginError, setLoginError] = useState('');
+  
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const roles = [
     { 
