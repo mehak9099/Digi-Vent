@@ -169,6 +169,8 @@ CREATE TABLE profiles (
   phone text,
   location text,
   bio text,
+  date_of_birth date,
+  experience_level text,
   total_hours integer DEFAULT 0,
   events_completed integer DEFAULT 0,
   level integer DEFAULT 1,
