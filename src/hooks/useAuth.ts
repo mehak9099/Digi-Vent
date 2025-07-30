@@ -112,8 +112,6 @@ export const useAuthProvider = (): AuthContextType => {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      setIsLoading(true);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password
@@ -133,14 +131,11 @@ export const useAuthProvider = (): AuthContextType => {
     } catch (error) {
       console.error('Login exception:', error);
       return { success: false, error: 'An unexpected error occurred' };
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const register = async (userData: RegisterData): Promise<{ success: boolean; error?: string }> => {
     try {
-      setIsLoading(true);
 
       // Sign up the user
       const { data, error } = await supabase.auth.signUp({
@@ -172,8 +167,6 @@ export const useAuthProvider = (): AuthContextType => {
     } catch (error) {
       console.error('Registration exception:', error);
       return { success: false, error: 'An unexpected error occurred' };
-    } finally {
-      setIsLoading(false);
     }
   };
 

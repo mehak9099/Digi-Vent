@@ -659,14 +659,14 @@ const AuthPage = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting || isLoading}
+              disabled={isSubmitting}
               className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 ${
-                isSubmitting || isLoading
+                isSubmitting
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5'
               }`}
             >
-              {isSubmitting || isLoading ? (
+              {isSubmitting ? (
                 <div className="flex items-center justify-center">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                   {activeTab === 'login' ? 'Signing In...' : 'Creating Account...'}
