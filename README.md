@@ -1,8 +1,24 @@
 # Digi-Vent - Event Management Platform
 
+> **🎉 Ready to Use!** This application works in both demo mode (no setup) and full mode (with Supabase).
+
 ## 🎯 Project Overview
 
 Digi-Vent is a comprehensive event management platform designed to streamline the entire event lifecycle from planning to execution. Built as a Final Year Project (FYP), this platform provides tools for event organizers, volunteers, and administrators to collaborate effectively and create memorable experiences.
+
+## ⚡ Quick Start (No Setup Required)
+
+```bash
+npm install
+npm run dev
+```
+
+**That's it!** The app runs in demo mode with mock data. No database setup needed for testing.
+
+### Demo Accounts
+- **Admin:** `admin@demo.com` / any password
+- **Organizer:** `organizer@demo.com` / any password  
+- **Volunteer:** `volunteer@demo.com` / any password
 
 ## 🚀 Features
 
@@ -108,12 +124,18 @@ npm run preview
 
 ## 🔐 Authentication System
 
-The platform includes a mock authentication system for demonstration purposes:
+The platform supports both demo mode and full Supabase authentication:
 
-### Test Accounts
-- **Admin**: `admin@digi-vent.com` / `password123`
-- **Organizer**: `organizer@digi-vent.com` / `password123`
-- **Volunteer**: `volunteer@digi-vent.com` / `password123`
+### Demo Mode (Default)
+- **Admin**: `admin@demo.com` / any password
+- **Organizer**: `organizer@demo.com` / any password
+- **Volunteer**: `volunteer@demo.com` / any password
+
+### Full Mode (With Supabase)
+- Complete user registration with email verification
+- Secure password requirements
+- Role-based access control
+- Profile management
 
 ### Features
 - Role-based access control

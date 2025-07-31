@@ -38,7 +38,7 @@ const AuthPage = () => {
   const [authError, setAuthError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
-  const { login, register, isLoading } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 

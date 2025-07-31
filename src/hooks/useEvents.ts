@@ -27,6 +27,124 @@ export const useEvents = () => {
       setLoading(true);
       setError(null);
 
+      // Demo mode - return mock data
+      if (!supabase) {
+        const mockEvents: Event[] = [
+          {
+            id: '1',
+            title: 'TechFest 2025',
+            description: 'Annual technology festival featuring workshops, demos, and networking opportunities.',
+            start_date: '2025-08-10T10:00:00Z',
+            end_date: '2025-08-10T18:00:00Z',
+            location_name: 'Convention Center',
+            location_address: '123 Main St, Downtown',
+            capacity: 500,
+            registered_count: 234,
+            category: 'Technology',
+            tags: ['tech', 'networking', 'workshops'],
+            status: 'published',
+            is_public: true,
+            price: 0,
+            cover_image_url: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
+            organizer_id: 'demo-organizer',
+            requirements: ['Laptop recommended', 'Basic programming knowledge'],
+            target_audience: ['Developers', 'Students', 'Tech enthusiasts'],
+            learning_objectives: ['Learn new technologies', 'Network with peers', 'Hands-on workshops'],
+            amenities: ['WiFi', 'Refreshments', 'Parking'],
+            budget_total: 50000,
+            budget_spent: 25000,
+            created_at: '2025-01-01T00:00:00Z',
+            updated_at: '2025-01-01T00:00:00Z',
+            organizer: {
+              id: 'demo-organizer',
+              full_name: 'Tech Events Inc.',
+              avatar_url: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+              email: 'organizer@techfest.com'
+            }
+          },
+          {
+            id: '2',
+            title: 'Community Food Drive',
+            description: 'Monthly food distribution event serving local families in need.',
+            start_date: '2025-08-15T08:00:00Z',
+            end_date: '2025-08-15T14:00:00Z',
+            location_name: 'Central Park Pavilion',
+            location_address: 'Central Park, City Center',
+            capacity: 150,
+            registered_count: 89,
+            category: 'Community Service',
+            tags: ['community', 'food', 'volunteer'],
+            status: 'published',
+            is_public: true,
+            price: 0,
+            cover_image_url: 'https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
+            organizer_id: 'demo-organizer-2',
+            requirements: ['Physical activity tolerance'],
+            target_audience: ['Community volunteers', 'Local residents'],
+            learning_objectives: ['Community service', 'Teamwork', 'Social impact'],
+            amenities: ['Parking', 'Restrooms', 'Water stations'],
+            budget_total: 15000,
+            budget_spent: 8500,
+            created_at: '2025-01-01T00:00:00Z',
+            updated_at: '2025-01-01T00:00:00Z',
+            organizer: {
+              id: 'demo-organizer-2',
+              full_name: 'Community Care Foundation',
+              avatar_url: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+              email: 'contact@communitycare.org'
+            }
+          },
+          {
+            id: '3',
+            title: 'Youth Workshop Series',
+            description: 'Educational workshop series designed to empower local youth with valuable skills.',
+            start_date: '2025-08-20T13:00:00Z',
+            end_date: '2025-08-20T17:00:00Z',
+            location_name: 'Community Learning Center',
+            location_address: '456 Education Ave, Learning District',
+            capacity: 75,
+            registered_count: 45,
+            category: 'Education',
+            tags: ['education', 'youth', 'skills'],
+            status: 'published',
+            is_public: true,
+            price: 0,
+            cover_image_url: 'https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop',
+            organizer_id: 'demo-organizer-3',
+            requirements: ['Age 16-25', 'Interest in learning'],
+            target_audience: ['Youth', 'Students', 'Career seekers'],
+            learning_objectives: ['Skill development', 'Career guidance', 'Personal growth'],
+            amenities: ['Materials provided', 'Certificates', 'Refreshments'],
+            budget_total: 8000,
+            budget_spent: 3200,
+            created_at: '2025-01-01T00:00:00Z',
+            updated_at: '2025-01-01T00:00:00Z',
+            organizer: {
+              id: 'demo-organizer-3',
+              full_name: 'Youth Development Society',
+              avatar_url: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+              email: 'info@youthdev.org'
+            }
+          }
+        ];
+        
+        // Apply filters
+        let filtered = mockEvents;
+        if (filters?.isPublic !== undefined) {
+          filtered = filtered.filter(event => event.is_public === filters.isPublic);
+        }
+        if (filters?.category) {
+          filtered = filtered.filter(event => event.category === filters.category);
+        }
+        if (filters?.status) {
+          filtered = filtered.filter(event => event.status === filters.status);
+        }
+        
+        setEvents(filtered);
+        setLoading(false);
+        return;
+      }
+
       let query = supabase
         .from('events')
         .select(`
@@ -79,6 +197,27 @@ export const useEvents = () => {
     try {
       if (!user) {
         return { success: false, error: 'Not authenticated' };
+      }
+
+      // Demo mode - simulate event creation
+      if (!supabase) {
+        const newEvent = {
+          id: `demo-event-${Date.now()}`,
+          ...eventData,
+          organizer_id: user.id,
+          registered_count: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          organizer: {
+            id: user.id,
+            full_name: user.user_metadata?.full_name || 'Demo User',
+            avatar_url: user.user_metadata?.avatar_url || null,
+            email: user.email || ''
+          }
+        } as Event;
+        
+        setEvents(prev => [newEvent, ...prev]);
+        return { success: true, data: newEvent };
       }
 
       const { data, error } = await supabase
@@ -183,6 +322,17 @@ export const useEvents = () => {
     try {
       if (!user) {
         return { success: false, error: 'Not authenticated' };
+      }
+
+      // Demo mode - simulate registration
+      if (!supabase) {
+        // Update registered count in demo mode
+        setEvents(prev => prev.map(event => 
+          event.id === eventId 
+            ? { ...event, registered_count: event.registered_count + 1 }
+            : event
+        ));
+        return { success: true };
       }
 
       const { error } = await supabase

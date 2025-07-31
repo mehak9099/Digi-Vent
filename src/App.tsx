@@ -22,10 +22,15 @@ import BudgetExpenses from './pages/BudgetExpenses';
 import PublicEventsPage from './pages/PublicEventsPage';
 import ErrorPage from './pages/ErrorPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import DemoModeIndicator from './components/DemoModeIndicator';
+import { supabase } from './lib/supabase';
 
 function App() {
+  const isDemoMode = !supabase;
+
   return (
     <Router>
+      {isDemoMode && <DemoModeIndicator />}
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={

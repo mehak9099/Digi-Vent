@@ -45,6 +45,12 @@ export const useAuthProvider = (): AuthContextType => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // If Supabase is not configured, use demo mode
+    if (!supabase) {
+      setIsLoading(false);
+      return;
+    }
+
     // Get initial session
     const getInitialSession = async () => {
       try {
@@ -112,6 +118,44 @@ export const useAuthProvider = (): AuthContextType => {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
+      // Demo mode - simulate login
+      if (!supabase) {
+        const demoUser = {
+          id: 'demo-user-id',
+          email: email.trim(),
+          user_metadata: {
+            full_name: 'Demo User',
+            role: email.includes('admin') ? 'admin' : email.includes('organizer') ? 'organizer' : 'volunteer'
+          }
+        } as User;
+        
+        const demoProfile = {
+          id: 'demo-user-id',
+          email: email.trim(),
+          full_name: 'Demo User',
+          role: email.includes('admin') ? 'admin' : email.includes('organizer') ? 'organizer' : 'volunteer',
+          avatar_url: null,
+          phone: null,
+          location: null,
+          bio: null,
+          date_of_birth: null,
+          experience_level: null,
+          availability_status: 'available',
+          total_hours: 0,
+          events_completed: 0,
+          level: 1,
+          xp: 0,
+          streak: 0,
+          impact_score: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        } as Profile;
+        
+        setUser(demoUser);
+        setProfile(demoProfile);
+        return { success: true };
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password
@@ -189,6 +233,12 @@ export const useAuthProvider = (): AuthContextType => {
     try {
       if (!user) {
         return { success: false, error: 'Not authenticated' };
+      }
+
+      // Demo mode - simulate profile update
+      if (!supabase) {
+        setProfile(prev => prev ? { ...prev, ...updates } : null);
+        return { success: true };
       }
 
       const { data, error } = await supabase

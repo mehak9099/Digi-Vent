@@ -62,7 +62,7 @@ interface ValidationErrors {
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { register, isLoading: authLoading } = useAuth();
+  const { register } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
