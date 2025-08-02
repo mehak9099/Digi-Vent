@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 import type { Database } from '../lib/supabase';
@@ -43,6 +44,7 @@ export const useAuthProvider = (): AuthContextType => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // If Supabase is not configured, use demo mode
@@ -86,6 +88,21 @@ export const useAuthProvider = (): AuthContextType => {
 
         if (session?.user) {
           await fetchProfile(session.user.id);
+          
+          // Navigate after profile is fetched and user is authenticated
+          if (event === 'SIGNED_IN') {
+            // Small delay to ensure profile is loaded
+            setTimeout(() => {
+              const userRole = session.user.user_metadata?.role;
+              if (userRole === 'admin') {
+                navigate('/admin/dashboard');
+              } else if (userRole === 'organizer') {
+                navigate('/admin/dashboard');
+              } else {
+                navigate('/dashboard/volunteer');
+              }
+            }, 200);
+          }
         } else {
           setProfile(null);
         }
@@ -153,6 +170,18 @@ export const useAuthProvider = (): AuthContextType => {
         
         setUser(demoUser);
         setProfile(demoProfile);
+        
+        // Navigate to appropriate dashboard based on role
+        setTimeout(() => {
+          if (email.includes('admin')) {
+            navigate('/admin/dashboard');
+          } else if (email.includes('organizer')) {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/dashboard/volunteer');
+          }
+        }, 100);
+        
         return { success: true };
       }
 
@@ -168,6 +197,12 @@ export const useAuthProvider = (): AuthContextType => {
 
       if (data.user) {
         await fetchProfile(data.user.id);
+        
+        // Navigate to appropriate dashboard based on user role
+        setTimeout(() => {
+          // The profile will be fetched, so we'll handle navigation in the auth state change
+        }, 100);
+        
         return { success: true };
       }
 

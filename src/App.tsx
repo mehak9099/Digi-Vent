@@ -67,37 +67,37 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/admin" element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/dashboard" element={
           <ProtectedRoute>
             <Navigate to="/admin/dashboard" replace />
           </ProtectedRoute>
         } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/admin/events/create" element={
-          <ProtectedRoute requiredRole="admin">
+          <ProtectedRoute>
             <EventCreatePage />
           </ProtectedRoute>
         } />
         <Route path="/admin/events/edit/:eventId" element={
-          <ProtectedRoute requiredRole="admin">
+          <ProtectedRoute>
             <EventCreatePage />
           </ProtectedRoute>
         } />
         <Route path="/admin/events/duplicate/:eventId" element={
-          <ProtectedRoute requiredRole="admin">
+          <ProtectedRoute>
             <EventCreatePage />
           </ProtectedRoute>
         } />
         <Route path="/admin/volunteers" element={
-          <ProtectedRoute requiredRole="admin">
+          <ProtectedRoute>
             <VolunteerManagement />
           </ProtectedRoute>
         } />
         <Route path="/admin/expenses" element={
-          <ProtectedRoute requiredRole="admin">
+          <ProtectedRoute>
             <BudgetExpenses />
           </ProtectedRoute>
         } />

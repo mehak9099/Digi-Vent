@@ -209,21 +209,8 @@ const AuthPage = () => {
         if (result.success) {
           setSuccessMessage('Login successful! Redirecting...');
           
-          // Redirect based on role or original destination
-          setTimeout(() => {
-            if (from !== '/') {
-              navigate(from, { replace: true });
-            } else {
-              // Default redirects based on role
-              if (formData.role === 'admin') {
-                navigate('/admin/dashboard');
-              } else if (formData.role === 'organizer') {
-                navigate('/admin/dashboard');
-              } else {
-                navigate('/dashboard/volunteer');
-              }
-            }
-          }, 1000);
+          // Navigation is now handled in useAuth hook after profile is loaded
+          // Just show success message
         } else {
           setAuthError(result.error || 'Login failed. Please check your credentials.');
         }
@@ -240,18 +227,8 @@ const AuthPage = () => {
         if (result.success) {
           setSuccessMessage('Registration successful! Please check your email to verify your account.');
           
-          // Switch to login tab after successful registration
-          setTimeout(() => {
-            setActiveTab('login');
-            setFormData(prev => ({
-              ...prev,
-              password: '',
-              confirmPassword: '',
-              fullName: '',
-              phone: '',
-              acceptTerms: false
-            }));
-          }, 2000);
+          // Navigation is now handled in useAuth hook
+          // For registration, we might want to redirect to email confirmation page
         } else {
           setAuthError(result.error || 'Registration failed. Please try again.');
         }

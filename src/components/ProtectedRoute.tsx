@@ -30,7 +30,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && profile?.role !== requiredRole) {
+  // Allow admin access to all routes
+  // Allow organizer access to admin routes
+  // Restrict volunteer access to volunteer routes only
+  if (requiredRole) {
+    if (requiredRole === 'admin' && profile?.role !== 'admin') {
+      return <Navigate to="/403" replace />;
+    }
+    if (requiredRole === 'organizer' && !['admin', 'organizer'].includes(profile?.role || '')) {
+      return <Navigate to="/403" replace />;
+    }
+    if (requiredRole === 'volunteer' && profile?.role !== 'volunteer') {
+      return <Navigate to="/403" replace />;
+    }
+  }
+
+  // If no specific role required, allow access based on user's role
+  if (!requiredRole && profile?.role === 'volunteer') {
     return <Navigate to="/403" replace />;
   }
 

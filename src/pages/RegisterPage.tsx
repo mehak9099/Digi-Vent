@@ -360,18 +360,22 @@ const RegisterPage = () => {
     setIsSubmitting(true);
     
     try {
-      const success = await register(formData);
-      if (success) {
-        // Redirect based on role
-        if (formData.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else if (formData.role === 'organizer') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/dashboard/volunteer');
-        }
+      const result = await register({
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName,
+        role: 'volunteer', // Default role for registration page
+        phone: formData.phoneNumber,
+        location: formData.location,
+        dateOfBirth: formData.dateOfBirth,
+        experienceLevel: formData.experience
+      });
+      
+      if (result.success) {
+        // Navigation is now handled in useAuth hook
+        alert('Registration successful! Welcome to Digi-Vent!');
       } else {
-        alert('Registration failed. Please try again.');
+        alert(result.error || 'Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('Registration error:', error);
