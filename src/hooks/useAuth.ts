@@ -93,7 +93,7 @@ export const useAuthProvider = (): AuthContextType => {
           if (event === 'SIGNED_IN') {
             // Small delay to ensure profile is loaded
             setTimeout(() => {
-              const userRole = session.user.user_metadata?.role;
+              const userRole = profile?.role;
               if (userRole === 'admin') {
                 navigate('/admin/dashboard');
               } else if (userRole === 'organizer') {
