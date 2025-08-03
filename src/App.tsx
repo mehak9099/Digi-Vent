@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -29,7 +29,7 @@ function App() {
   const isDemoMode = !supabase;
 
   return (
-    <Router>
+    <>
       {isDemoMode && <DemoModeIndicator />}
       <Routes>
         {/* Public Routes */}
@@ -142,7 +142,7 @@ function App() {
         {/* Catch all route - redirect to 404 */}
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
