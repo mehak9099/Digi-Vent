@@ -88,21 +88,6 @@ export const useAuthProvider = (): AuthContextType => {
 
         if (session?.user) {
           await fetchProfile(session.user.id);
-          
-          // Navigate after profile is fetched and user is authenticated
-          if (event === 'SIGNED_IN') {
-            // Small delay to ensure profile is loaded
-            setTimeout(() => {
-              const userRole = profile?.role;
-              if (userRole === 'admin') {
-                navigate('/admin/dashboard');
-              } else if (userRole === 'organizer') {
-                navigate('/admin/dashboard');
-              } else {
-                navigate('/dashboard/volunteer');
-              }
-            }, 200);
-          }
         } else {
           setProfile(null);
         }
@@ -116,6 +101,8 @@ export const useAuthProvider = (): AuthContextType => {
 
   const fetchProfile = async (userId: string) => {
     try {
+      if (!supabase) return; // Skip in demo mode
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -128,6 +115,15 @@ export const useAuthProvider = (): AuthContextType => {
       }
 
       setProfile(data);
+      
+      // Navigate after profile is fetched
+      if (data) {
+        if (data.role === 'admin' || data.role === 'organizer') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard/volunteer');
+        }
+      }
     } catch (error) {
       console.error('Error in fetchProfile:', error);
     }
@@ -172,15 +168,12 @@ export const useAuthProvider = (): AuthContextType => {
         setProfile(demoProfile);
         
         // Navigate to appropriate dashboard based on role
-        setTimeout(() => {
-          if (email.includes('admin')) {
-            navigate('/admin/dashboard');
-          } else if (email.includes('organizer')) {
-            navigate('/admin/dashboard');
-          } else {
-            navigate('/dashboard/volunteer');
-          }
-        }, 100);
+        // Navigate based on role
+        if (email.includes('admin') || email.includes('organizer')) {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard/volunteer');
+        }
         
         return { success: true };
       }
@@ -197,11 +190,6 @@ export const useAuthProvider = (): AuthContextType => {
 
       if (data.user) {
         await fetchProfile(data.user.id);
-        
-        // Navigate to appropriate dashboard based on user role
-        setTimeout(() => {
-          // The profile will be fetched, so we'll handle navigation in the auth state change
-        }, 100);
         
         return { success: true };
       }

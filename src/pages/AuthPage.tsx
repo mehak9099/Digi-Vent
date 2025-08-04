@@ -208,9 +208,6 @@ const AuthPage = () => {
         
         if (result.success) {
           setSuccessMessage('Login successful! Redirecting...');
-          
-          // Navigation is now handled in useAuth hook after profile is loaded
-          // Just show success message
         } else {
           setAuthError(result.error || 'Login failed. Please check your credentials.');
         }
@@ -226,9 +223,6 @@ const AuthPage = () => {
         
         if (result.success) {
           setSuccessMessage('Registration successful! Please check your email to verify your account.');
-          
-          // Navigation is now handled in useAuth hook
-          // For registration, we might want to redirect to email confirmation page
         } else {
           setAuthError(result.error || 'Registration failed. Please try again.');
         }
