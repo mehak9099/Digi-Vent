@@ -6,7 +6,7 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-emerald-50">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_24%,rgba(79,70,229,0.05)_25%,rgba(79,70,229,0.05)_26%,transparent_27%,transparent_74%,rgba(79,70,229,0.05)_75%,rgba(79,70,229,0.05)_76%,transparent_77%)] bg-[length:60px_60px]" />
-      
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
@@ -29,7 +29,7 @@ const Hero = () => {
                 <br />
                 All in One Platform.
               </h1>
-              
+
               <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl">
                 From small meetups to large festivals, Digi-Vent makes organizing events simple, 
                 efficient, and stress-free. Join thousands of organizers who trust us with their success.
@@ -39,26 +39,22 @@ const Hero = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-  )
-  onClick={() => window.location.href = '/register'}
-  className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-}
->
-  Get Started Free
-  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
-</button>
+                onClick={() => window.location.href = '/register'}
+                className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                Get Started Free
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+              </button>
 
-              
-              <button className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white border-2 border-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200 shadow-lg hover:shadow-xl">
-              <button 
+              <button
                 onClick={() => alert('Demo video coming soon!')}
                 className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white border-2 border-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => window.location.href = '/events'}
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-all duration-200"
               >
@@ -125,7 +121,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Floating Elements */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center animate-bounce">
               <CheckCircle className="w-12 h-12 text-emerald-600" />
