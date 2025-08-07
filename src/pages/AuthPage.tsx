@@ -244,17 +244,7 @@ const AuthPage = () => {
   const handleSocialAuth = async (provider: 'google' | 'github') => {
     try {
       setAuthError('');
-      
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
-      });
-
-      if (error) {
-        setAuthError(`${provider} authentication failed: ${error.message}`);
-      }
+      setAuthError(`${provider} authentication is not available in demo mode. Please use email/password login.`);
     } catch (error) {
       console.error(`${provider} auth error:`, error);
       setAuthError(`${provider} authentication failed. Please try again.`);

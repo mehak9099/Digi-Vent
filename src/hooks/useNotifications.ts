@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
 import type { Database } from '../lib/supabase';
 
 type Notification = Database['public']['Tables']['notifications']['Row'];
 type NotificationInsert = Database['public']['Tables']['notifications']['Insert'];
+
+// Local storage key
+const NOTIFICATIONS_STORAGE_KEY = 'digi-vent-notifications';
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -13,6 +15,51 @@ export const useNotifications = () => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
+  // Initialize with mock data
+  const initializeMockData = () => {
+    const mockNotifications: Notification[] = [
+      {
+        id: '1',
+        user_id: user?.id || 'demo-user',
+        title: 'New Event Assignment',
+        message: 'You have been assigned to help with TechFest 2025 setup.',
+        type: 'info',
+        is_read: false,
+        action_url: '/admin/events/1',
+        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() // 2 hours ago
+      },
+      {
+        id: '2',
+        user_id: user?.id || 'demo-user',
+        title: 'Task Completed',
+        message: 'Great job completing the venue booking task!',
+        type: 'success',
+        is_read: false,
+        action_url: '/tasks/board',
+        created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+      },
+      {
+        id: '3',
+        user_id: user?.id || 'demo-user',
+        title: 'Upcoming Event Reminder',
+        message: 'Community Food Drive is scheduled for tomorrow at 8:00 AM.',
+        type: 'warning',
+        is_read: true,
+        action_url: '/event/2',
+        created_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString() // 2 days ago
+      }
+    ];
+
+    const storageKey = `${NOTIFICATIONS_STORAGE_KEY}-${user?.id || 'guest'}`;
+    const storedNotifications = localStorage.getItem(storageKey);
+    if (!storedNotifications) {
+      localStorage.setItem(storageKey, JSON.stringify(mockNotifications));
+      return mockNotifications;
+    }
+
+    return JSON.parse(storedNotifications);
+  };
+
   const fetchNotifications = async () => {
     try {
       if (!user) return;
@@ -20,19 +67,9 @@ export const useNotifications = () => {
       setLoading(true);
       setError(null);
 
-      const { data, error } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) {
-        throw error;
-      }
-
-      setNotifications(data || []);
-      setUnreadCount(data?.filter(n => !n.is_read).length || 0);
+      const userNotifications = initializeMockData();
+      setNotifications(userNotifications);
+      setUnreadCount(userNotifications.filter(n => !n.is_read).length);
     } catch (err) {
       console.error('Error fetching notifications:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch notifications');
@@ -43,16 +80,18 @@ export const useNotifications = () => {
 
   const markAsRead = async (id: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const { error } = await supabase
-        .from('notifications')
-        .update({ is_read: true })
-        .eq('id', id);
+      const storageKey = `${NOTIFICATIONS_STORAGE_KEY}-${user?.id || 'guest'}`;
+      const storedNotifications = localStorage.getItem(storageKey);
+      const currentNotifications = storedNotifications ? JSON.parse(storedNotifications) : [];
 
-      if (error) {
-        throw error;
-      }
+      const updatedNotifications = currentNotifications.map((notification: Notification) => 
+        notification.id === id 
+          ? { ...notification, is_read: true }
+          : notification
+      );
 
-      // Update local state
+      localStorage.setItem(storageKey, JSON.stringify(updatedNotifications));
+      
       setNotifications(prev => 
         prev.map(notification => 
           notification.id === id 
@@ -78,17 +117,17 @@ export const useNotifications = () => {
         return { success: false, error: 'Not authenticated' };
       }
 
-      const { error } = await supabase
-        .from('notifications')
-        .update({ is_read: true })
-        .eq('user_id', user.id)
-        .eq('is_read', false);
+      const storageKey = `${NOTIFICATIONS_STORAGE_KEY}-${user.id}`;
+      const storedNotifications = localStorage.getItem(storageKey);
+      const currentNotifications = storedNotifications ? JSON.parse(storedNotifications) : [];
 
-      if (error) {
-        throw error;
-      }
+      const updatedNotifications = currentNotifications.map((notification: Notification) => ({
+        ...notification,
+        is_read: true
+      }));
 
-      // Update local state
+      localStorage.setItem(storageKey, JSON.stringify(updatedNotifications));
+      
       setNotifications(prev => 
         prev.map(notification => ({ ...notification, is_read: true }))
       );
@@ -110,19 +149,22 @@ export const useNotifications = () => {
         return { success: false, error: 'Not authenticated' };
       }
 
-      const { error } = await supabase
-        .from('notifications')
-        .insert({
-          ...notificationData,
-          user_id: user.id
-        });
+      const newNotification: Notification = {
+        id: `notification-${Date.now()}`,
+        ...notificationData,
+        user_id: user.id,
+        is_read: false,
+        created_at: new Date().toISOString()
+      };
 
-      if (error) {
-        throw error;
-      }
-
-      // Refresh notifications
-      await fetchNotifications();
+      const storageKey = `${NOTIFICATIONS_STORAGE_KEY}-${user.id}`;
+      const storedNotifications = localStorage.getItem(storageKey);
+      const currentNotifications = storedNotifications ? JSON.parse(storedNotifications) : [];
+      const updatedNotifications = [newNotification, ...currentNotifications];
+      
+      localStorage.setItem(storageKey, JSON.stringify(updatedNotifications));
+      setNotifications(prev => [newNotification, ...prev]);
+      setUnreadCount(prev => prev + 1);
 
       return { success: true };
     } catch (err) {
@@ -136,17 +178,14 @@ export const useNotifications = () => {
 
   const deleteNotification = async (id: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const { error } = await supabase
-        .from('notifications')
-        .delete()
-        .eq('id', id);
+      const storageKey = `${NOTIFICATIONS_STORAGE_KEY}-${user?.id || 'guest'}`;
+      const storedNotifications = localStorage.getItem(storageKey);
+      const currentNotifications = storedNotifications ? JSON.parse(storedNotifications) : [];
 
-      if (error) {
-        throw error;
-      }
-
-      // Update local state
-      const notification = notifications.find(n => n.id === id);
+      const notification = currentNotifications.find((n: Notification) => n.id === id);
+      const filteredNotifications = currentNotifications.filter((n: Notification) => n.id !== id);
+      
+      localStorage.setItem(storageKey, JSON.stringify(filteredNotifications));
       setNotifications(prev => prev.filter(n => n.id !== id));
       
       if (notification && !notification.is_read) {
@@ -162,33 +201,6 @@ export const useNotifications = () => {
       };
     }
   };
-
-  // Real-time subscription for notifications
-  useEffect(() => {
-    if (!user) return;
-
-    const subscription = supabase
-      .channel('notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          const newNotification = payload.new as Notification;
-          setNotifications(prev => [newNotification, ...prev]);
-          setUnreadCount(prev => prev + 1);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [user]);
 
   useEffect(() => {
     fetchNotifications();

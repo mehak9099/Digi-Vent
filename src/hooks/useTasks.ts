@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
 import type { Database } from '../lib/supabase';
 
@@ -13,11 +12,114 @@ type Task = Database['public']['Tables']['tasks']['Row'] & {
 type TaskInsert = Database['public']['Tables']['tasks']['Insert'];
 type TaskUpdate = Database['public']['Tables']['tasks']['Update'];
 
+// Local storage keys
+const TASKS_STORAGE_KEY = 'digi-vent-tasks';
+const TASK_ASSIGNMENTS_STORAGE_KEY = 'digi-vent-task-assignments';
+
 export const useTasks = (eventId?: string) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+
+  // Initialize with mock data
+  const initializeMockData = () => {
+    const mockTasks: Task[] = [
+      {
+        id: '1',
+        title: 'Setup registration booth',
+        description: 'Prepare materials and signage for volunteer registration',
+        event_id: '1',
+        status: 'backlog',
+        priority: 'medium',
+        due_date: '2025-02-15T00:00:00Z',
+        estimated_hours: 4,
+        actual_hours: 0,
+        progress: 0,
+        tags: ['setup', 'registration'],
+        dependencies: [],
+        created_by: 'demo-organizer',
+        created_at: '2025-01-20T00:00:00Z',
+        updated_at: '2025-01-20T00:00:00Z'
+      },
+      {
+        id: '2',
+        title: 'Order catering supplies',
+        description: 'Purchase food and beverages for volunteers',
+        event_id: '1',
+        status: 'todo',
+        priority: 'high',
+        due_date: '2025-02-10T00:00:00Z',
+        estimated_hours: 2,
+        actual_hours: 0,
+        progress: 0,
+        tags: ['catering', 'supplies'],
+        dependencies: [],
+        created_by: 'demo-organizer',
+        created_at: '2025-01-19T00:00:00Z',
+        updated_at: '2025-01-19T00:00:00Z'
+      },
+      {
+        id: '3',
+        title: 'Create volunteer schedule',
+        description: 'Assign volunteers to specific time slots and roles',
+        event_id: '1',
+        status: 'progress',
+        priority: 'high',
+        due_date: '2025-02-12T00:00:00Z',
+        estimated_hours: 6,
+        actual_hours: 2,
+        progress: 60,
+        tags: ['scheduling', 'volunteers'],
+        dependencies: ['1'],
+        created_by: 'demo-organizer',
+        created_at: '2025-01-18T00:00:00Z',
+        updated_at: '2025-01-21T00:00:00Z'
+      },
+      {
+        id: '4',
+        title: 'Design event flyers',
+        description: 'Create promotional materials for social media and print',
+        event_id: '1',
+        status: 'review',
+        priority: 'medium',
+        due_date: '2025-02-08T00:00:00Z',
+        estimated_hours: 8,
+        actual_hours: 8,
+        progress: 100,
+        tags: ['design', 'marketing'],
+        dependencies: [],
+        created_by: 'demo-organizer',
+        created_at: '2025-01-15T00:00:00Z',
+        updated_at: '2025-01-22T00:00:00Z'
+      },
+      {
+        id: '5',
+        title: 'Book event venue',
+        description: 'Secure location and sign rental agreement',
+        event_id: '1',
+        status: 'completed',
+        priority: 'high',
+        due_date: '2025-01-30T00:00:00Z',
+        estimated_hours: 4,
+        actual_hours: 5,
+        progress: 100,
+        tags: ['venue', 'booking'],
+        dependencies: [],
+        created_by: 'demo-organizer',
+        created_at: '2025-01-05T00:00:00Z',
+        updated_at: '2025-01-25T00:00:00Z'
+      }
+    ];
+
+    const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+    if (!storedTasks) {
+      localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(mockTasks));
+      return mockTasks;
+    }
+
+    return JSON.parse(storedTasks);
+  };
 
   const fetchTasks = async (filters?: {
     eventId?: string;
@@ -28,54 +130,23 @@ export const useTasks = (eventId?: string) => {
       setLoading(true);
       setError(null);
 
-      let query = supabase
-        .from('tasks')
-        .select(`
-          *,
-          event:events(
-            id,
-            title,
-            start_date,
-            location_name
-          ),
-          assignments:task_assignments(
-            id,
-            user_id,
-            assigned_at,
-            accepted_at,
-            completed_at,
-            user:profiles(
-              id,
-              full_name,
-              avatar_url
-            )
-          )
-        `)
-        .order('created_at', { ascending: false });
-
+      const allTasks = initializeMockData();
+      
       // Apply filters
+      let filtered = allTasks;
       if (filters?.eventId || eventId) {
-        query = query.eq('event_id', filters?.eventId || eventId);
+        filtered = filtered.filter(task => task.event_id === (filters?.eventId || eventId));
       }
       if (filters?.status) {
-        query = query.eq('status', filters.status);
+        filtered = filtered.filter(task => task.status === filters.status);
       }
       if (filters?.assignedToMe && user) {
-        query = query.in('id', 
-          supabase
-            .from('task_assignments')
-            .select('task_id')
-            .eq('user_id', user.id)
-        );
+        // In a real app, this would check task assignments
+        // For demo, we'll show all tasks
+        filtered = allTasks;
       }
 
-      const { data, error } = await query;
-
-      if (error) {
-        throw error;
-      }
-
-      setTasks(data || []);
+      setTasks(filtered);
     } catch (err) {
       console.error('Error fetching tasks:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
@@ -90,31 +161,22 @@ export const useTasks = (eventId?: string) => {
         return { success: false, error: 'Not authenticated' };
       }
 
-      const { data, error } = await supabase
-        .from('tasks')
-        .insert({
-          ...taskData,
-          created_by: user.id
-        })
-        .select(`
-          *,
-          event:events(
-            id,
-            title,
-            start_date,
-            location_name
-          )
-        `)
-        .single();
+      const newTask: Task = {
+        id: `task-${Date.now()}`,
+        ...taskData,
+        created_by: user.id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
 
-      if (error) {
-        throw error;
-      }
+      const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+      const currentTasks = storedTasks ? JSON.parse(storedTasks) : [];
+      const updatedTasks = [newTask, ...currentTasks];
+      
+      localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(updatedTasks));
+      setTasks(prev => [newTask, ...prev]);
 
-      // Update local state
-      setTasks(prev => [data, ...prev]);
-
-      return { success: true, data };
+      return { success: true, data: newTask };
     } catch (err) {
       console.error('Error creating task:', err);
       return { 
@@ -126,29 +188,26 @@ export const useTasks = (eventId?: string) => {
 
   const updateTask = async (id: string, updates: TaskUpdate): Promise<{ success: boolean; data?: Task; error?: string }> => {
     try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .update(updates)
-        .eq('id', id)
-        .select(`
-          *,
-          event:events(
-            id,
-            title,
-            start_date,
-            location_name
-          )
-        `)
-        .single();
-
-      if (error) {
-        throw error;
+      const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+      const currentTasks = storedTasks ? JSON.parse(storedTasks) : [];
+      
+      const taskIndex = currentTasks.findIndex((task: Task) => task.id === id);
+      if (taskIndex === -1) {
+        return { success: false, error: 'Task not found' };
       }
 
-      // Update local state
-      setTasks(prev => prev.map(task => task.id === id ? data : task));
+      const updatedTask = {
+        ...currentTasks[taskIndex],
+        ...updates,
+        updated_at: new Date().toISOString()
+      };
 
-      return { success: true, data };
+      currentTasks[taskIndex] = updatedTask;
+      localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(currentTasks));
+      
+      setTasks(prev => prev.map(task => task.id === id ? updatedTask : task));
+
+      return { success: true, data: updatedTask };
     } catch (err) {
       console.error('Error updating task:', err);
       return { 
@@ -164,20 +223,22 @@ export const useTasks = (eventId?: string) => {
         return { success: false, error: 'Not authenticated' };
       }
 
-      const { error } = await supabase
-        .from('task_assignments')
-        .insert({
-          task_id: taskId,
-          user_id: userId,
-          assigned_by: user.id
-        });
+      const newAssignment = {
+        id: `assignment-${Date.now()}`,
+        task_id: taskId,
+        user_id: userId,
+        assigned_by: user.id,
+        assigned_at: new Date().toISOString(),
+        accepted_at: null,
+        completed_at: null,
+        notes: null
+      };
 
-      if (error) {
-        throw error;
-      }
-
-      // Refresh tasks to get updated assignments
-      await fetchTasks();
+      const storedAssignments = localStorage.getItem(TASK_ASSIGNMENTS_STORAGE_KEY);
+      const currentAssignments = storedAssignments ? JSON.parse(storedAssignments) : [];
+      const updatedAssignments = [newAssignment, ...currentAssignments];
+      
+      localStorage.setItem(TASK_ASSIGNMENTS_STORAGE_KEY, JSON.stringify(updatedAssignments));
 
       return { success: true };
     } catch (err) {
@@ -195,18 +256,16 @@ export const useTasks = (eventId?: string) => {
         return { success: false, error: 'Not authenticated' };
       }
 
-      const { error } = await supabase
-        .from('task_assignments')
-        .update({ accepted_at: new Date().toISOString() })
-        .eq('task_id', taskId)
-        .eq('user_id', user.id);
+      const storedAssignments = localStorage.getItem(TASK_ASSIGNMENTS_STORAGE_KEY);
+      const currentAssignments = storedAssignments ? JSON.parse(storedAssignments) : [];
 
-      if (error) {
-        throw error;
-      }
+      const updatedAssignments = currentAssignments.map((assignment: any) => 
+        assignment.task_id === taskId && assignment.user_id === user.id
+          ? { ...assignment, accepted_at: new Date().toISOString() }
+          : assignment
+      );
 
-      // Refresh tasks
-      await fetchTasks();
+      localStorage.setItem(TASK_ASSIGNMENTS_STORAGE_KEY, JSON.stringify(updatedAssignments));
 
       return { success: true };
     } catch (err) {
@@ -225,31 +284,22 @@ export const useTasks = (eventId?: string) => {
       }
 
       // Update task status
-      const { error: taskError } = await supabase
-        .from('tasks')
-        .update({ 
-          status: 'completed',
-          progress: 100
-        })
-        .eq('id', taskId);
-
-      if (taskError) {
-        throw taskError;
-      }
+      await updateTask(taskId, { 
+        status: 'completed',
+        progress: 100
+      });
 
       // Update assignment
-      const { error: assignmentError } = await supabase
-        .from('task_assignments')
-        .update({ completed_at: new Date().toISOString() })
-        .eq('task_id', taskId)
-        .eq('user_id', user.id);
+      const storedAssignments = localStorage.getItem(TASK_ASSIGNMENTS_STORAGE_KEY);
+      const currentAssignments = storedAssignments ? JSON.parse(storedAssignments) : [];
 
-      if (assignmentError) {
-        throw assignmentError;
-      }
+      const updatedAssignments = currentAssignments.map((assignment: any) => 
+        assignment.task_id === taskId && assignment.user_id === user.id
+          ? { ...assignment, completed_at: new Date().toISOString() }
+          : assignment
+      );
 
-      // Refresh tasks
-      await fetchTasks();
+      localStorage.setItem(TASK_ASSIGNMENTS_STORAGE_KEY, JSON.stringify(updatedAssignments));
 
       return { success: true };
     } catch (err) {

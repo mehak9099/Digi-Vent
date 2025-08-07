@@ -1,23 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
+// Mock Supabase client for demo mode
+export const supabase = null;
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Missing Supabase environment variables. Using demo mode.');
-}
-
-export const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce',
-    debug: process.env.NODE_ENV === 'development'
-  }
-}) : null;
-
-// Database types
+// Database types (kept for TypeScript compatibility)
 export interface Database {
   public: {
     Tables: {
