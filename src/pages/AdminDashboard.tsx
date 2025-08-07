@@ -382,7 +382,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
         </header>
 
         {/* Dashboard Content */}
