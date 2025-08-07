@@ -141,7 +141,11 @@ export const useAuthProvider = (): AuthContextType => {
 
         // Navigate based on role
         setTimeout(() => {
-          if (demoAccount.role === 'admin' || demoAccount.role === 'organizer') {
+          if (demoAccount.role === 'admin') {
+            navigate('/admin/dashboard');
+          if (data.role === 'admin') {
+            navigate('/admin/dashboard');
+          } else if (data.role === 'organizer') {
             navigate('/admin/dashboard');
           } else {
             navigate('/dashboard/volunteer');

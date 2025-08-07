@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import LogoutModal from '../components/LogoutModal';
 import { Calendar, Clock, Users, Award, TrendingUp, Bell, MessageCircle, CheckCircle, Star, Target, Zap, MapPin, Book, Heart, Activity, Settings, Search, Filter, Plus, ChevronRight, ChevronDown, Play, Pause, MoreHorizontal, Flag, User, Camera, Upload, Download, Share, Edit, Trash2, Eye, EyeOff, Lock, Unlock, RefreshCw, AlertTriangle, Info, X, Check, ArrowUp, ArrowDown, ArrowRight, Home, Briefcase, GraduationCap, Shield, Globe, Smartphone, Headphones, Mic, Video, FileText, Image, Link, Mail, Phone, Navigation, Compass, Map, Route, Car, Bus, Bike, Wallet as Walk } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 interface VolunteerProfile {
   id: string;
@@ -68,10 +72,14 @@ interface Achievement {
 }
 
 const VolunteerDashboard = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [showAnalytics, setShowAnalytics] = useState(true);
   const [notifications, setNotifications] = useState(3);
   const [selectedTimeRange, setSelectedTimeRange] = useState('week');
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Mock data - in real app, this would come from API
   const volunteer: VolunteerProfile = {
@@ -299,13 +307,20 @@ const VolunteerDashboard = () => {
               {/* Profile */}
               <div className="flex items-center space-x-3">
                 <img
-                  src={volunteer.avatar}
-                  alt={volunteer.name}
+                  src={user?.user_metadata?.avatar_url || volunteer.avatar}
+                  alt={user?.user_metadata?.full_name || volunteer.name}
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-gray-900">{volunteer.name}</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.user_metadata?.full_name || volunteer.name}</p>
                   <p className="text-xs text-gray-500">Level {volunteer.level} Volunteer</p>
+                </div>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
                 </div>
               </div>
             </div>
@@ -699,6 +714,24 @@ const VolunteerDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Logout Modal */}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={async () => {
+          setIsLoggingOut(true);
+          try {
+            await logout();
+            setShowLogoutModal(false);
+          } catch (error) {
+            console.error('Logout error:', error);
+          } finally {
+            setIsLoggingOut(false);
+          }
+        }}
+        isLoading={isLoggingOut}
+      />
     </div>
   );
 };

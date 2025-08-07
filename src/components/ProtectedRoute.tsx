@@ -57,9 +57,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
   }
 
-  // If no specific role required, allow access based on user's role
-  if (!requiredRole && profile?.role === 'volunteer') {
-    return <Navigate to="/403" replace />;
+  // If no specific role required, check if user should be redirected to appropriate dashboard
+  if (!requiredRole) {
+    const currentPath = location.pathname;
+    
+    // If volunteer tries to access admin routes, redirect to volunteer dashboard
+    if (profile?.role === 'volunteer' && currentPath.startsWith('/admin')) {
+      return <Navigate to="/dashboard/volunteer" replace />;
+    }
+    
+    // If admin/organizer tries to access volunteer routes, redirect to admin dashboard
+    if (['admin', 'organizer'].includes(profile?.role || '') && currentPath.startsWith('/dashboard/volunteer')) {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;

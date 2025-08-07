@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import LogoutModal from '../components/LogoutModal';
 import { 
   BarChart3, 
   Calendar, 
@@ -25,6 +28,7 @@ import {
   MessageCircle,
   Zap,
   Shield
+  LogOut
 } from 'lucide-react';
 
 interface MetricCard {
@@ -61,9 +65,13 @@ interface Activity {
 }
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
   const [notifications, setNotifications] = useState(12);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const executiveMetrics: MetricCard[] = [
     {
@@ -182,32 +190,32 @@ const AdminDashboard = () => {
       title: 'Overview',
       items: [
         { icon: BarChart3, label: 'Dashboard', route: '/admin', active: true },
-        { icon: TrendingUp, label: 'Analytics', route: '/admin/analytics', badge: 'new' },
+        { icon: TrendingUp, label: 'Analytics', route: '/admin/dashboard', badge: 'new' },
         { icon: Bell, label: 'Notifications', route: '/admin/notifications', count: notifications }
       ]
     },
     {
       title: 'Event Management',
       items: [
-        { icon: Plus, label: 'Create Event', route: '/admin/events/create', highlight: true },
-        { icon: Calendar, label: 'All Events', route: '/admin/events', count: 23 },
-        { icon: Clock, label: 'Scheduling', route: '/admin/scheduling', urgent: 3 },
-        { icon: MapPin, label: 'Venues', route: '/admin/venues' }
+        { icon: Plus, label: 'Create Event', route: '/admin/events/create', highlight: true, onClick: () => navigate('/admin/events/create') },
+        { icon: Calendar, label: 'All Events', route: '/admin/events', count: 23, onClick: () => navigate('/admin/dashboard') },
+        { icon: Clock, label: 'Task Board', route: '/admin/kanban', urgent: 3, onClick: () => navigate('/admin/kanban') },
+        { icon: MapPin, label: 'Venues', route: '/admin/venues', onClick: () => navigate('/admin/dashboard') }
       ]
     },
     {
       title: 'People & Community',
       items: [
-        { icon: Users, label: 'Volunteers', route: '/admin/volunteers', count: 247 },
-        { icon: Award, label: 'Recognition', route: '/admin/recognition' },
-        { icon: MessageCircle, label: 'Communications', route: '/admin/communications' }
+        { icon: Users, label: 'Volunteers', route: '/admin/volunteers', count: 247, onClick: () => navigate('/admin/volunteers') },
+        { icon: Award, label: 'Recognition', route: '/admin/recognition', onClick: () => navigate('/admin/dashboard') },
+        { icon: MessageCircle, label: 'Communications', route: '/admin/communications', onClick: () => navigate('/admin/dashboard') }
       ]
     },
     {
       title: 'Operations',
       items: [
-        { icon: DollarSign, label: 'Budget', route: '/admin/budget' },
-        { icon: Shield, label: 'Safety', route: '/admin/safety' }
+        { icon: DollarSign, label: 'Budget', route: '/admin/expenses', onClick: () => navigate('/admin/expenses') },
+        { icon: Shield, label: 'Safety', route: '/admin/safety', onClick: () => navigate('/admin/dashboard') }
       ]
     }
   ];
@@ -270,6 +278,7 @@ const AdminDashboard = () => {
                 {section.items.map((item, itemIndex) => (
                   <button
                     key={itemIndex}
+                    onClick={item.onClick || (() => {})}
                     className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                       item.active
                         ? 'bg-indigo-100 text-indigo-700'
@@ -355,12 +364,21 @@ const AdminDashboard = () => {
 
               {/* Profile */}
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">AD</span>
-                </div>
+                <img 
+                  src={user?.user_metadata?.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop'} 
+                  alt="Profile" 
+                  className="w-8 h-8 rounded-full object-cover" 
+                />
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-gray-900">Admin User</p>
-                  <p className="text-xs text-gray-500">Super Administrator</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.user_metadata?.full_name || user?.email}</p>
+                  <p className="text-xs text-gray-500">{user?.user_metadata?.role || 'User'}</p>
+                </div>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
                 </div>
               </div>
             </div>
@@ -607,6 +625,24 @@ const AdminDashboard = () => {
           </div>
         </main>
       </div>
+
+      {/* Logout Modal */}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={async () => {
+          setIsLoggingOut(true);
+          try {
+            await logout();
+            setShowLogoutModal(false);
+          } catch (error) {
+            console.error('Logout error:', error);
+          } finally {
+            setIsLoggingOut(false);
+          }
+        }}
+        isLoading={isLoggingOut}
+      />
     </div>
   );
 };

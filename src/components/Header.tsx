@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Menu, X, Check } from 'lucide-react';
+import { Calendar, Menu, X, Check, LogOut } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import LogoutModal from './LogoutModal';
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -139,6 +144,29 @@ const Header = () => {
               </button>
             ))}
             <div className="pt-4 space-y-3 border-t border-gray-100">
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <img 
+                      src={user.user_metadata?.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop'} 
+                      alt="Profile" 
+                      className="w-8 h-8 rounded-full object-cover" 
+                    />
+                    <div className="hidden md:block">
+                      <p className="text-sm font-medium text-gray-900">{user.user_metadata?.full_name || user.email}</p>
+                      <p className="text-xs text-gray-500">{user.user_metadata?.role || 'User'}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowLogoutModal(true)}
+                    className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    <span className="hidden md:inline">Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <>
               <button 
                 onClick={() => navigate('/login')}
                 className="w-full px-4 py-3 text-base font-medium text-gray-700 border border-gray-300 rounded-lg hover:border-gray-400 transition-all duration-200"
@@ -151,6 +179,8 @@ const Header = () => {
               >
                 Get Started
               </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -234,6 +264,24 @@ const Header = () => {
           </div>
         </div>
       )}
+
+      {/* Logout Modal */}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={async () => {
+          setIsLoggingOut(true);
+          try {
+            await logout();
+            setShowLogoutModal(false);
+          } catch (error) {
+            console.error('Logout error:', error);
+          } finally {
+            setIsLoggingOut(false);
+          }
+        }}
+        isLoading={isLoggingOut}
+      />
     </header>
   );
 };
