@@ -332,13 +332,25 @@ const AvailabilityPage = () => {
 
               {/* Quick Actions */}
               <div className="flex items-center space-x-2">
-                <button className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200">
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                  title="Refresh Data"
+                >
                   <RefreshCw className="w-5 h-5" />
                 </button>
-                <button className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200">
+                <button 
+                  onClick={() => alert('Calendar sync feature coming soon!')}
+                  className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                  title="Sync Calendar"
+                >
                   <Sync className="w-5 h-5" />
                 </button>
-                <button className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200">
+                <button 
+                  onClick={() => alert('Settings feature coming soon!')}
+                  className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                  title="Settings"
+                >
                   <Settings className="w-5 h-5" />
                 </button>
               </div>

@@ -283,13 +283,25 @@ const VolunteerDashboard = () => {
 
               {/* Quick Action Buttons */}
               <div className="flex items-center space-x-2">
-                <button className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200">
+                <button 
+                  onClick={() => navigate('/availability')}
+                  className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                  title="Manage Availability"
+                >
                   <Zap className="w-5 h-5" />
                 </button>
-                <button className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200">
+                <button 
+                  onClick={() => navigate('/tasks/board')}
+                  className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                  title="View Tasks"
+                >
                   <Clock className="w-5 h-5" />
                 </button>
-                <button className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200">
+                <button 
+                  onClick={() => navigate('/feedback')}
+                  className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                  title="Give Feedback"
+                >
                   <MessageCircle className="w-5 h-5" />
                 </button>
               </div>
@@ -342,15 +354,24 @@ const VolunteerDashboard = () => {
               )}
             </div>
             <div className="flex flex-wrap gap-3 mt-4 md:mt-0">
-              <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2">
+              <button 
+                onClick={() => navigate('/availability')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
+              >
                 <CheckCircle className="w-4 h-4" />
                 <span>Mark Available</span>
               </button>
-              <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2">
+              <button 
+                onClick={() => navigate('/availability')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
+              >
                 <Calendar className="w-4 h-4" />
                 <span>View Schedule</span>
               </button>
-              <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2">
+              <button 
+                onClick={() => alert('Team chat feature coming soon!')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
+              >
                 <MessageCircle className="w-4 h-4" />
                 <span>Team Chat</span>
               </button>
@@ -471,28 +492,40 @@ const VolunteerDashboard = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <button 
+                  onClick={() => alert('Check-in feature coming soon!')}
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-600" />
                     <span className="font-medium text-gray-900">Check In to Event</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </button>
-                <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <button 
+                  onClick={() => alert('Hour logging feature coming soon!')}
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
                   <div className="flex items-center space-x-3">
                     <Clock className="w-5 h-5 text-blue-600" />
                     <span className="font-medium text-gray-900">Log Hours</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </button>
-                <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <button 
+                  onClick={() => navigate('/availability')}
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
                   <div className="flex items-center space-x-3">
                     <Calendar className="w-5 h-5 text-purple-600" />
                     <span className="font-medium text-gray-900">Update Availability</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </button>
-                <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <button 
+                  onClick={() => alert('Team chat feature coming soon!')}
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
                   <div className="flex items-center space-x-3">
                     <MessageCircle className="w-5 h-5 text-orange-600" />
                     <span className="font-medium text-gray-900">Team Chat</span>
@@ -622,10 +655,16 @@ const VolunteerDashboard = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        <button className="px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                        <button 
+                          onClick={() => alert('Task accepted! You will receive further instructions.')}
+                          className="px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                        >
                           Accept
                         </button>
-                        <button className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <button 
+                          onClick={() => alert('Help request sent to team coordinator!')}
+                          className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                        >
                           Need Help
                         </button>
                       </div>
@@ -674,6 +713,10 @@ const VolunteerDashboard = () => {
                         <p className="text-xs text-gray-500">Teams: {event.team.join(', ')}</p>
                       </div>
                       <button className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                      <button 
+                        onClick={() => navigate(`/event/${event.id}`)}
+                        className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                      >
                         View Details
                       </button>
                     </div>
@@ -705,6 +748,10 @@ const VolunteerDashboard = () => {
                     Complete "Stage Management Basics" to unlock new event opportunities and earn +50 XP
                   </p>
                   <button className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                  <button 
+                    onClick={() => alert('Learning module coming soon!')}
+                    className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                  >
                     Start Learning
                   </button>
                 </div>

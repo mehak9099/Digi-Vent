@@ -532,27 +532,40 @@ const AdminDashboard = () => {
                 </div>
                 <div className="p-6 space-y-3">
                   <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                  <button 
+                    onClick={() => navigate('/admin/events/create')}
+                    className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  >
                     <div className="flex items-center space-x-3">
                       <Plus className="w-5 h-5 text-green-600" />
                       <span className="font-medium text-gray-900">Create New Event</span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-400" />
                   </button>
-                  <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                  <button 
+                    onClick={() => navigate('/admin/volunteers')}
+                    className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  >
                     <div className="flex items-center space-x-3">
                       <Users className="w-5 h-5 text-blue-600" />
                       <span className="font-medium text-gray-900">Manage Volunteers</span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-400" />
                   </button>
-                  <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                  <button 
+                    onClick={() => alert('Export feature coming soon!')}
+                    className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  >
                     <div className="flex items-center space-x-3">
                       <Download className="w-5 h-5 text-purple-600" />
                       <span className="font-medium text-gray-900">Export Reports</span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-400" />
                   </button>
-                  <button className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                  <button 
+                    onClick={() => alert('Announcement feature coming soon!')}
+                    className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  >
                     <div className="flex items-center space-x-3">
                       <MessageCircle className="w-5 h-5 text-orange-600" />
                       <span className="font-medium text-gray-900">Send Announcement</span>

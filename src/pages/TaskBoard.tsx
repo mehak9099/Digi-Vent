@@ -601,10 +601,17 @@ const TaskBoard = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+            <button 
+              onClick={() => alert('Add task feature coming soon!')}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Add Task
             </button>
-            <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+            <button 
+              onClick={() => alert('Bulk actions feature coming soon!')}
+              className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+            >
               <Edit className="w-4 h-4 mr-2" />
               Bulk Actions
             </button>
@@ -699,7 +706,10 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ column, tasks }) => {
           </div>
         )}
         
-        <button className="w-full mt-2 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors duration-200">
+        <button 
+          onClick={() => alert('Add task to column feature coming soon!')}
+          className="w-full mt-2 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors duration-200"
+        >
           <Plus className="w-4 h-4 mx-auto" />
         </button>
       </div>
