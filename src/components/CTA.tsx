@@ -32,7 +32,6 @@ const CTA = () => {
            <button
   onClick={() => window.location.href = '/register'}
   className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-}
 >
   Get Started Free
   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
