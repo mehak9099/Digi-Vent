@@ -50,9 +50,9 @@ npm run dev
 
 ### Demo Mode (No Supabase)
 Use any email with these patterns:
-- `admin@demo.com` → Admin access
-- `organizer@demo.com` → Organizer access  
-- `volunteer@demo.com` → Volunteer access
+- `admin@demo.com` → Admin access → `/admin/dashboard`
+- `organizer@demo.com` → Organizer access → `/admin/dashboard`
+- `volunteer@demo.com` → Volunteer access → `/dashboard/volunteer`
 - Password: any password
 
 ### With Supabase

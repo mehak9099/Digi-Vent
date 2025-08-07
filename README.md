@@ -16,9 +16,9 @@ npm run dev
 **That's it!** The app runs in demo mode with mock data. No database setup needed for testing.
 
 ### Demo Accounts
-- **Admin:** `admin@demo.com` / any password
-- **Organizer:** `organizer@demo.com` / any password  
-- **Volunteer:** `volunteer@demo.com` / any password
+- **Admin:** `admin@demo.com` / any password → `/admin/dashboard`
+- **Organizer:** `organizer@demo.com` / any password → `/admin/dashboard`
+- **Volunteer:** `volunteer@demo.com` / any password → `/dashboard/volunteer`
 
 ## 🚀 Features
 

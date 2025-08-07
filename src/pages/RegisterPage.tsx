@@ -1123,9 +1123,9 @@ const RegisterPage = () => {
                   {currentStep < totalSteps ? (
                     <button
                       onClick={nextStep}
-                      disabled={!isStepValid()}
+                      disabled={!isStepValid() || isSubmitting}
                       className={`flex items-center px-8 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                        isStepValid()
+                        isStepValid() && !isSubmitting
                           ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}

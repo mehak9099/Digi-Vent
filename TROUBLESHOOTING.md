@@ -24,6 +24,36 @@ disabled={isSubmitting}
 
 **Status:** ✅ Fixed in latest version
 
+#### Problem: Login spinner keeps loading indefinitely
+**Symptoms:**
+- User enters credentials and clicks login
+- Spinner shows "Signing In..." but never completes
+- No navigation to dashboard occurs
+- User gets stuck on login page
+
+**Root Cause:** 
+Navigation logic conflicts between auth state changes and manual navigation calls.
+
+**Solution:**
+```typescript
+// ✅ Correct - Navigation in auth hook after profile fetch
+const fetchProfile = async (userId: string) => {
+  // ... fetch profile logic
+  
+  // Only navigate from auth pages
+  const currentPath = window.location.pathname;
+  if (currentPath === '/login' || currentPath === '/auth') {
+    if (data.role === 'admin' || data.role === 'organizer') {
+      navigate('/admin/dashboard');
+    } else {
+      navigate('/dashboard/volunteer');
+    }
+  }
+};
+```
+
+**Status:** ✅ Fixed in latest version
+
 #### Problem: 403 errors after successful login
 **Symptoms:**
 - User logs in successfully

@@ -38,7 +38,7 @@ const AuthPage = () => {
   const [authError, setAuthError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
-  const { login, register } = useAuth();
+  const { login, register, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -172,6 +172,10 @@ const AuthPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double submission
+    if (isSubmitting) return;
+    
     setIsSubmitting(true);
     setAuthError('');
     setSuccessMessage('');
@@ -208,6 +212,7 @@ const AuthPage = () => {
         
         if (result.success) {
           setSuccessMessage('Login successful! Redirecting...');
+          // Navigation is handled in useAuth hook
         } else {
           setAuthError(result.error || 'Login failed. Please check your credentials.');
         }
@@ -223,6 +228,7 @@ const AuthPage = () => {
         
         if (result.success) {
           setSuccessMessage('Registration successful! Please check your email to verify your account.');
+          // Navigation is handled in useAuth hook for demo mode
         } else {
           setAuthError(result.error || 'Registration failed. Please try again.');
         }
@@ -630,17 +636,17 @@ const AuthPage = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || authLoading}
               className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 ${
-                isSubmitting
+                isSubmitting || authLoading
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5'
               }`}
             >
-              {isSubmitting ? (
+              {isSubmitting || authLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  {activeTab === 'login' ? 'Signing In...' : 'Creating Account...'}
+                  {authLoading ? 'Loading...' : activeTab === 'login' ? 'Signing In...' : 'Creating Account...'}
                 </div>
               ) : (
                 activeTab === 'login' ? 'Sign In' : 'Create Account'
