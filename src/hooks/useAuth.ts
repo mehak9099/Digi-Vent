@@ -143,6 +143,7 @@ export const useAuthProvider = (): AuthContextType => {
         setTimeout(() => {
           if (demoAccount.role === 'admin') {
             navigate('/admin/dashboard');
+          }
           if (data.role === 'admin') {
             navigate('/admin/dashboard');
           } else if (data.role === 'organizer') {
