@@ -27,7 +27,7 @@ import {
   Award,
   MessageCircle,
   Zap,
-  Shield
+  Shield,
   LogOut
 } from 'lucide-react';
 
