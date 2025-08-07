@@ -48,11 +48,18 @@ const Hero = () => {
 
               
               <button className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white border-2 border-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200 shadow-lg hover:shadow-xl">
+              <button 
+                onClick={() => alert('Demo video coming soon!')}
+                className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white border-2 border-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </button>
               
-              <button className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-all duration-200">
+              <button 
+                onClick={() => window.location.href = '/events'}
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-all duration-200"
+              >
                 Explore Events
               </button>
             </div>

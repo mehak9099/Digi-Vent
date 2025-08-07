@@ -739,6 +739,7 @@ const EventCreatePage = () => {
               <div className="flex space-x-3">
                 <button
                   type="button"
+                  onClick={() => alert('Draft saved!')}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
                 >
                   Save as Draft

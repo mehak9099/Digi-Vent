@@ -396,15 +396,24 @@ const AvailabilityPage = () => {
               </p>
             </div>
             <div className="flex flex-wrap gap-3 mt-4 md:mt-0">
-              <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2">
+              <button 
+                onClick={() => alert('Auto-fill feature coming soon!')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
+              >
                 <Zap className="w-4 h-4" />
                 <span>Auto-Fill</span>
               </button>
-              <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2">
+              <button 
+                onClick={() => alert('Calendar import feature coming soon!')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
+              >
                 <Upload className="w-4 h-4" />
                 <span>Import Calendar</span>
               </button>
-              <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2">
+              <button 
+                onClick={() => alert('Team sync feature coming soon!')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
+              >
                 <Users className="w-4 h-4" />
                 <span>Team Sync</span>
               </button>

@@ -537,13 +537,22 @@ const VolunteerManagement = () => {
 
               {/* Actions */}
               <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                <button 
+                  onClick={() => alert(`Viewing ${volunteer.name}'s profile...`)}
+                  className="flex-1 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                >
                   <Eye className="w-4 h-4 mx-auto" />
                 </button>
-                <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <button 
+                  onClick={() => alert(`Messaging ${volunteer.name}...`)}
+                  className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
                   <MessageCircle className="w-4 h-4 mx-auto" />
                 </button>
-                <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <button 
+                  onClick={() => alert(`Editing ${volunteer.name}'s profile...`)}
+                  className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
                   <Edit className="w-4 h-4 mx-auto" />
                 </button>
               </div>

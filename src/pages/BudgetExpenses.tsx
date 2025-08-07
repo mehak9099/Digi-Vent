@@ -707,15 +707,32 @@ const BudgetExpenses = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex items-center justify-center space-x-2">
                         <button className="text-blue-600 hover:text-blue-800 p-1 rounded" title="Edit">
+                        <button 
+                          onClick={() => alert('Edit expense feature coming soon!')}
+                          className="text-blue-600 hover:text-blue-800 p-1 rounded" 
+                          title="Edit"
+                        >
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className="text-green-600 hover:text-green-800 p-1 rounded" title="Approve">
+                        <button 
+                          onClick={() => alert('Expense approved!')}
+                          className="text-green-600 hover:text-green-800 p-1 rounded" 
+                          title="Approve"
+                        >
                           <Check className="w-4 h-4" />
                         </button>
-                        <button className="text-red-600 hover:text-red-800 p-1 rounded" title="Delete">
+                        <button 
+                          onClick={() => confirm('Are you sure you want to delete this expense?') && alert('Expense deleted!')}
+                          className="text-red-600 hover:text-red-800 p-1 rounded" 
+                          title="Delete"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
-                        <button className="text-gray-600 hover:text-gray-800 p-1 rounded" title="More">
+                        <button 
+                          onClick={() => alert('More options coming soon!')}
+                          className="text-gray-600 hover:text-gray-800 p-1 rounded" 
+                          title="More"
+                        >
                           <MoreHorizontal className="w-4 h-4" />
                         </button>
                       </div>

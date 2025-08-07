@@ -279,7 +279,7 @@ export const useAuthProvider = (): AuthContextType => {
       localStorage.removeItem('digi-vent-profile');
       setUser(null);
       setProfile(null);
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
     }

@@ -39,6 +39,10 @@ const CTA = () => {
 
             
             <button className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white rounded-xl hover:bg-white hover:text-indigo-600 transition-all duration-200">
+            <button 
+              onClick={() => alert('Demo scheduling feature coming soon!')}
+              className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white border-2 border-white rounded-xl hover:bg-white hover:text-indigo-600 transition-all duration-200"
+            >
               <Calendar className="w-5 h-5 mr-2" />
               Schedule Demo
             </button>

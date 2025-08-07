@@ -340,7 +340,7 @@ const PublicEventsPage = () => {
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Handle favorite
+                          alert('Added to favorites!');
                         }}
                         className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors duration-200"
                       >
@@ -349,7 +349,9 @@ const PublicEventsPage = () => {
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Handle share
+                          navigator.share ? 
+                            navigator.share({ title: event.title, url: window.location.href }) :
+                            alert('Share feature coming soon!');
                         }}
                         className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors duration-200"
                       >

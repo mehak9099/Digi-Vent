@@ -138,12 +138,22 @@ const Footer = () => {
             </p>
             <div className="flex space-x-6 text-sm text-gray-400">
               <button className="hover:text-white transition-colors duration-200">
+              <button 
+                onClick={() => alert('Privacy policy coming soon!')}
+                className="hover:text-white transition-colors duration-200"
+              >
                 Privacy
               </button>
-              <button className="hover:text-white transition-colors duration-200">
+              <button 
+                onClick={() => alert('Terms of service coming soon!')}
+                className="hover:text-white transition-colors duration-200"
+              >
                 Terms
               </button>
-              <button className="hover:text-white transition-colors duration-200">
+              <button 
+                onClick={() => alert('Cookie policy coming soon!')}
+                className="hover:text-white transition-colors duration-200"
+              >
                 Cookies
               </button>
             </div>
