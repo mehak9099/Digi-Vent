@@ -46,7 +46,6 @@ const CTA = () => {
               <Calendar className="w-5 h-5 mr-2" />
               Schedule Demo
             </button>
-          </div>
 
           {/* Trust Badge */}
           <div className="flex items-center justify-center space-x-2 text-indigo-100">
