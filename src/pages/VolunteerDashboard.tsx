@@ -325,8 +325,7 @@ const VolunteerDashboard = () => {
               </div>
             </div>
           </div>
-        </div>
-      
+      </header>
 
       {/* Dynamic Welcome Banner */}
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 text-white">
