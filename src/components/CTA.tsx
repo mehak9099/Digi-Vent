@@ -6,7 +6,7 @@ const CTA = () => {
     <section className="py-20 bg-gradient-to-br from-indigo-600 via-purple-600 to-emerald-600 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_24%,rgba(255,255,255,0.05)_25%,rgba(255,255,255,0.05)_26%,transparent_27%,transparent_74%,rgba(255,255,255,0.05)_75%,rgba(255,255,255,0.05)_76%,transparent_77%)] bg-[length:60px_60px]" />
-      
+
       {/* Floating Elements */}
       <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse" />
       <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/5 rounded-full animate-bounce" />
@@ -29,26 +29,25 @@ const CTA = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-           <button
-  onClick={() => window.location.href = '/register'}
-  className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
->
-  Get Started Free
-  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
-</button>
+            <button
+              onClick={() => window.location.href = '/register'}
+              className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              Get Started Free
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+            </button>
 
-            
-            <button className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white rounded-xl hover:bg-white hover:text-indigo-600 transition-all duration-200">
-            <button 
+            <button
               onClick={() => alert('Demo scheduling feature coming soon!')}
-              className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-indigo-600 bg-white border-2 border-white rounded-xl hover:bg-white hover:text-indigo-600 transition-all duration-200"
+              className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white rounded-xl hover:bg-white hover:text-indigo-600 transition-all duration-200"
             >
               <Calendar className="w-5 h-5 mr-2" />
               Schedule Demo
             </button>
+          </div>
 
           {/* Trust Badge */}
-          <div className="flex items-center justify-center space-x-2 text-indigo-100">
+          <div className="flex items-center justify-center space-x-2 text-indigo-100 pt-6">
             <Shield className="w-5 h-5" />
             <span className="text-sm font-medium">No credit card required</span>
           </div>
