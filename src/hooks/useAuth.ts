@@ -93,7 +93,6 @@ export const useAuthProvider = (): AuthContextType => {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      setIsLoading(true);
 
       // Demo authentication - check for demo accounts
       const demoAccounts = {
@@ -139,16 +138,12 @@ export const useAuthProvider = (): AuthContextType => {
         setUser(mockUser);
         setProfile(mockProfile);
 
-        // Navigate based on role
-        setTimeout(() => {
-          if (demoAccount.role === 'admin') {
-            navigate('/admin/dashboard');
-          } else if (demoAccount.role === 'organizer') {
-            navigate('/admin/dashboard');
-          } else {
-            navigate('/dashboard/volunteer');
-          }
-        }, 100);
+        // Navigate based on role - immediate navigation
+        if (demoAccount.role === 'admin' || demoAccount.role === 'organizer') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard/volunteer');
+        }
 
         return { success: true };
       }
@@ -188,9 +183,8 @@ export const useAuthProvider = (): AuthContextType => {
         setUser(mockUser);
         setProfile(mockProfile);
 
-        setTimeout(() => {
-          navigate('/dashboard/volunteer');
-        }, 100);
+        // Navigate immediately for non-demo accounts
+        navigate('/dashboard/volunteer');
 
         return { success: true };
       }
@@ -199,8 +193,6 @@ export const useAuthProvider = (): AuthContextType => {
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: 'Login failed' };
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -255,21 +247,17 @@ export const useAuthProvider = (): AuthContextType => {
       setUser(mockUser);
       setProfile(mockProfile);
 
-      // Navigate based on role
-      setTimeout(() => {
-        if (data.role === 'admin' || data.role === 'organizer') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/dashboard/volunteer');
-        }
-      }, 100);
+      // Navigate based on role - immediate navigation
+      if (data.role === 'admin' || data.role === 'organizer') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard/volunteer');
+      }
 
       return { success: true };
     } catch (error) {
       console.error('Registration error:', error);
       return { success: false, error: 'Registration failed' };
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -279,7 +267,7 @@ export const useAuthProvider = (): AuthContextType => {
       localStorage.removeItem('digi-vent-profile');
       setUser(null);
       setProfile(null);
-      navigate('/login');
+      // Don't navigate here - let the component handle navigation
     } catch (error) {
       console.error('Logout error:', error);
     }
